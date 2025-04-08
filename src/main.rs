@@ -1,3 +1,7 @@
+use crate::user::user::User;
+
+mod user;
+
 fn main(){
     println!("hello manx");
 }
@@ -536,4 +540,217 @@ fn nothing() {
     // _ DI SINI UNTUK VARIABLE YG TDK DIGUNAKAN
 }
 
-//referenc field di struct
+//method <-------------------------------->
+struct Jiko{
+    name:String
+}
+
+impl Jiko{
+    fn jiko_pr(&self){
+        println!("Hallo {} ", self.name);
+    }
+}
+
+#[test]
+fn test_method(){
+    let wibu: Jiko = Jiko{
+        name: String::from("Jancok")
+    };
+
+    wibu.jiko_pr();
+}
+
+//associated function<---------------------------------->
+
+//struct nya di atas
+impl GeoPoint{
+    fn new(long: f64 , lat:f64)->GeoPoint{
+        GeoPoint(long,lat)
+    }
+}
+
+#[test]
+fn test_associated_function() {
+    let geo: GeoPoint = GeoPoint::new(0090808.88,4545.00);
+    println!("{} {}" , geo.0, geo.1);
+}
+
+//enum <------------------------------------->
+enum Role{
+    Admin,
+    Member
+}
+
+#[test]
+fn test_enum() {
+    let _alfa = Role::Admin;
+    let _ = Role::Member;
+}
+
+//enum data
+enum Payment{
+    //cc
+    CreditCard(String),
+    BankTf(String, String),
+    EWallet(String, String)
+}
+//enum  juga bisa dikasih method
+impl Payment{
+
+    //destructuring enum
+    fn bayar(&self, amount: u32){
+
+        match self {
+
+            Payment::CreditCard(number)=>{
+                println!("Pay number {} jumlah{}" , number , amount);
+            }
+            Payment::BankTf(bank , number)=>{
+                println!("pay with {} number {} jumlah {}", bank , number, amount);
+            }
+            Payment::EWallet(ewallet, number)=>{
+                println!("pay with {} number {} jumlah{}", ewallet , number , amount);
+            }
+
+        }
+    }
+}
+#[test]
+fn test_pay() {
+    let pay = Payment::BankTf(String::from("BCA"),String::from("097773344"));
+    let pay_cc = Payment::CreditCard(String::from("99322445"));
+    let pay_wallet = Payment::EWallet(String::from("ovo"), String::from("00399392"));
+
+    pay.bayar(5000000);
+    pay_cc.bayar(5000000);
+    pay_wallet.bayar(5000000);
+}
+
+//mengakses data enum <----------------------------------------------------------------------->
+#[test]
+fn mactch_enum() {
+    let admin = Role::Admin;
+
+    match admin{
+        Role::Admin=>{
+            println!("hello admin");
+        }
+        Role::Member=>{
+            println!("hello member");
+        }
+    }
+
+}
+
+//pattern matching untuk value
+#[test]
+fn matching_value() {
+    let name = "Alfa";
+
+    match name{
+        "Alfa"=>{
+            println!("Halo boss");
+        }
+
+        "Zahra"|"Lena" => {
+            println!("Halo sefure ku ");
+        }
+
+        _other=>{
+            println!("Elu siapa brok")
+        }
+    }
+}
+
+//range pattern
+#[test]
+fn range_pattern() {
+    let value = 100000;
+
+    match value{
+        1..=5 =>{
+            println!("Bosok");
+        }
+        _other=>{
+            println!("GG");
+        }
+
+    }
+}
+
+//destructuring struct pattern
+#[test]
+fn struct_pattern() {
+    let point  = GeoPoint(66.878,456.998);
+    match point {
+        GeoPoint(long,0.0)=>{
+            println!("long {}", long);
+        }
+        GeoPoint(0.0, lat)=>{
+            println!("lat {}", lat);
+        }
+        GeoPoint(long, lat)=>{
+            println!("Long: {} Lat: {}" , long , lat);
+        }
+    }
+
+    //cara ke 2 untuk struct yg bukan bentuk tupple
+    let zahra: Member = Member{
+        nama:String::from("Zahra"),
+        umur: 20,
+        alamat:String::from("JL entah berantah")
+    };
+
+    match zahra {
+        Member{nama, umur, ..}=>{
+            /*
+            .. ini adalah ignoring untuk struct biasa
+            _ ini adalah ignoring untuk struct tupple
+            */
+            println!("{} {} ", nama , umur);
+        }
+    }
+}
+
+#[test]
+fn test_match_expression() {
+    let nilai = 100;
+    let result = match nilai {
+        0 => {"no nilai"},
+        75 => {"kkm"},
+        _other =>{"Bagus"}
+    };
+
+    println!("{}",result);
+}
+
+//type alias<------------------------------------------------>
+type Age = u8;
+type IdentityNumber = String;
+
+struct Penduduk{
+    nik: IdentityNumber,
+    umur: Age
+}
+
+#[test]
+fn test_type_alias() {
+    let dadang = Penduduk{
+        nik:String::from("994883772"),
+        umur:20
+    };
+
+    println!("{} {}", dadang.nik, dadang.umur);
+}
+
+//akses mod
+#[test]
+fn akses_mod() {
+    //struct User dari file user.rs
+    let dadang = User{
+        name:String::from("Dadang"),
+        age:30
+    };
+
+    dadang.cek_user();
+}
